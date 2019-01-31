@@ -8,7 +8,7 @@ const burger = props => {
             // [,]
             return [...Array(props.ingredients[igKey])].map((_, i) => {
                 return <BurgerIngredient
-                    key={igKey + 1}
+                    key={igKey + i}
                     type={igKey}
                 />
             });
