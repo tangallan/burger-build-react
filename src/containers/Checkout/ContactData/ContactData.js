@@ -53,8 +53,8 @@ class ContactData extends Component {
                 elementType: 'select',
                 elementConfig: {
                     options: [
-                        { value: 'fastest', display: 'Fastest' },
-                        { value: 'cheapest', display: 'Cheapest' }
+                        { value: 'fastest', displayValue: 'Fastest' },
+                        { value: 'cheapest', displayValue: 'Cheapest' }
                     ]
                 },
                 value: ''
@@ -87,16 +87,27 @@ class ContactData extends Component {
             });
     };
 
+    inputChangedHandler = (evt, inputIdentifier) => {
+        const updateOrderForm = { ...this.state.orderForm };
+        const updatedFormElement = { ...updateOrderForm[inputIdentifier] };
+        updatedFormElement.value = evt.target.value;
+        updateOrderForm[inputIdentifier] = updatedFormElement;
+
+        this.setState({
+            orderForm: updateOrderForm
+        });
+    };
+
     render() {
         const formElementsArray = [];
-        for(let key in this.state.orderForm) {
+        for (let key in this.state.orderForm) {
             formElementsArray.push({
                 id: key,
                 config: this.state.orderForm[key]
-            })
+            });
         }
         let form = (
-            <form>
+            <form >
                 {/* <Input
                     inputtype='input'
                     type='text'
@@ -123,11 +134,13 @@ class ContactData extends Component {
                 /> */}
                 {/* <Input elementType="..." elementConfig="..." value="..." /> */}
                 {formElementsArray.map(fe => (
-                    <Input 
-                                key={fe.id}
-                                elementType={fe.config.elementType} 
-                                elementConfig={fe.config.elementConfig} 
-                                value={fe.config.value} /> 
+                    <Input
+                        key={fe.id}
+                        elementType={fe.config.elementType}
+                        elementConfig={fe.config.elementConfig}
+                        value={fe.config.value}
+                        changed={(evt) => this.inputChangedHandler(evt, fe.id)}
+                    />
                 ))}
                 <Button btnType='Success' clicked={this.orderHandler}>
                     ORDER
