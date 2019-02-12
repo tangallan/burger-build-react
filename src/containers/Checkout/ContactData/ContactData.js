@@ -65,13 +65,18 @@ class ContactData extends Component {
 
     orderHandler = event => {
         event.preventDefault();
-        // console.log(this.props.ingredients);
+
         this.setState({ loading: true });
-        // alert('You continue');
+
+        const formData = {};
+        for(let formElementId in this.state.orderForm) {
+            formData[formElementId] = this.state.orderForm[formElementId].value;
+        }
+
         const order = {
             ingredients: this.props.ingredients,
             price: this.props.price,
-            deliveryMethod: 'fastest'
+            orderData: formData
         };
 
         axios
@@ -107,7 +112,7 @@ class ContactData extends Component {
             });
         }
         let form = (
-            <form >
+            <form onSubmit={this.orderHandler}>
                 {/* <Input
                     inputtype='input'
                     type='text'
@@ -142,7 +147,7 @@ class ContactData extends Component {
                         changed={(evt) => this.inputChangedHandler(evt, fe.id)}
                     />
                 ))}
-                <Button btnType='Success' clicked={this.orderHandler}>
+                <Button btnType='Success'>
                     ORDER
                 </Button>
             </form>
