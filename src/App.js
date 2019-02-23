@@ -1,14 +1,21 @@
 import React, { Component } from 'react';
 import Layout from './containers/Layout/Layout';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Switch, withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
 
 import BurgerBuilder from './containers/BurgerBuilder/BurgerBuilder';
 import Checkout from './containers/Checkout/Checkout';
 import Orders from './containers/Orders/Orders';
 import Auth from './containers/Auth/Auth';
 import Logout from './containers/Auth/Logout/Logout';
+import * as actions from './store/actions/index';
 
 class App extends Component {
+    
+    componentDidMount() {
+        this.props.onTryAutoSignUp();
+    }
+
     render() {
         return (
             <Layout>
@@ -24,6 +31,12 @@ class App extends Component {
             </Layout>
         );
     }
+};
+
+const mapDispatchToProps = dispatch => {
+    return {
+        onTryAutoSignUp: () => dispatch(actions.authCheckState())
+    }
 }
 
-export default App;
+export default withRouter(connect(null, mapDispatchToProps)(App));
