@@ -17,7 +17,6 @@ const authStart = (state, action) => {
 };
 
 const authSuccess = (state, action) => {
-    // console.log('authsuccess', action);
     return {
         ...state,
         loading: false,

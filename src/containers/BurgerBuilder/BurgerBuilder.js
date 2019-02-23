@@ -20,7 +20,7 @@ class BurgerBuilder extends Component {
     // }
 
     componentDidMount() {
-        console.log(process.env);
+        // console.log(process.env);
         this.props.onInitIngredients();
     }
 
