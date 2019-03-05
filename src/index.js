@@ -5,6 +5,7 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { BrowserRouter } from 'react-router-dom';
 import reduxThunk from 'redux-thunk';
+import createSagaMiddleware from 'redux-saga';
 
 import { Provider } from 'react-redux';
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
@@ -12,6 +13,8 @@ import burgerBuilderReducer from './store/reducers/burgerBuilder';
 import orderReducer from './store/reducers/order';
 import authReducer from './store/reducers/auth';
 
+// sagas
+import { watchAuth } from './store/sagas/index';
 
 const composeEnhancers = process.env.NODE_ENV === 'development' ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__: null || compose;
 const rootReducers = combineReducers({
@@ -20,10 +23,16 @@ const rootReducers = combineReducers({
     auth: authReducer
 });
 
+const sagaMiddleware = createSagaMiddleware();
+
 const store = createStore(
     rootReducers,
-    composeEnhancers(applyMiddleware(reduxThunk))
+    composeEnhancers(applyMiddleware(reduxThunk, sagaMiddleware))
 );
+
+// the watch auth acts as a LISTENER
+// within the watchAuth it listens to an action
+sagaMiddleware.run(watchAuth);
 
 const app = (
     <Provider store={store}>

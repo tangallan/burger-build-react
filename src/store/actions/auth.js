@@ -23,53 +23,72 @@ export const authFail = error => {
 };
 
 export const logout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('expirationDate');
-    localStorage.removeItem('userId');
+    // THIS SIDE AFFECT is moved to use redux-saga!
+    // localStorage.removeItem('token');
+    // localStorage.removeItem('expirationDate');
+    // localStorage.removeItem('userId');
+    return {
+        type: actionTypes.AUTH_INITIATE_LOGOUT
+    }
+};
+
+export const logoutSucceed = () => {
     return {
         type: actionTypes.AUTH_LOGOUT
     }
 };
 
 export const checkAuthTimeout = (expirationTime) => {
-    return dispatch => {
-        setTimeout(() => {
-            dispatch(logout());
-        }, expirationTime * 1000);
+    // moved side affect to saga
+    return {
+        type: actionTypes.AUTH_CHECK_TIMEOUT,
+        expirationTime: expirationTime
     }
+    // return dispatch => {
+    //     setTimeout(() => {
+    //         dispatch(logout());
+    //     }, expirationTime * 1000);
+    // }
 }
 
 export const auth = (email, password, isSignUp) => {
-    return dispatch => {
-        // auth the user
-        dispatch(authStart());
-        const authData = {
-            email: email,
-            password: password,
-            returnSecureToken: true
-        };
-        
-        let url = `https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=${process.env.REACT_APP_FIREBASE_API_KEY}`;
-        if (!isSignUp) {
-            url = `https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=${process.env.REACT_APP_FIREBASE_API_KEY}`;
-        }
-
-        axios
-            .post(url, authData)
-            .then(response => {
-                const expirationDate = new Date(new Date().getTime() + response.data.expiresIn * 1000);
-
-                localStorage.setItem('token', response.data.idToken);
-                localStorage.setItem('expirationDate', expirationDate);
-                localStorage.setItem('userId', response.data.localId);
-
-                dispatch(authSuccess(response.data.idToken, response.data.localId));
-                dispatch(checkAuthTimeout(response.data.expiresIn));
-            })
-            .catch(error => {
-                dispatch(authFail(error.response.data.error));
-            });
+    return {
+        type: actionTypes.AUTH_USER,
+        email: email,
+        password: password,
+        isSignUp: isSignUp
     };
+    // MOVED to SAGA!
+    // return dispatch => {
+        // auth the user
+        // dispatch(authStart());
+        // const authData = {
+        //     email: email,
+        //     password: password,
+        //     returnSecureToken: true
+        // };
+        
+        // let url = `https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=${process.env.REACT_APP_FIREBASE_API_KEY}`;
+        // if (!isSignUp) {
+        //     url = `https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=${process.env.REACT_APP_FIREBASE_API_KEY}`;
+        // }
+
+        // axios
+        //     .post(url, authData)
+        //     .then(response => {
+        //         const expirationDate = new Date(new Date().getTime() + response.data.expiresIn * 1000);
+
+        //         localStorage.setItem('token', response.data.idToken);
+        //         localStorage.setItem('expirationDate', expirationDate);
+        //         localStorage.setItem('userId', response.data.localId);
+
+        //         dispatch(authSuccess(response.data.idToken, response.data.localId));
+        //         dispatch(checkAuthTimeout(response.data.expiresIn));
+        //     })
+        //     .catch(error => {
+        //         dispatch(authFail(error.response.data.error));
+        //     });
+    // };
 };
 
 export const setAuthRedirectPath = (path) => {
