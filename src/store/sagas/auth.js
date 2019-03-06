@@ -2,7 +2,7 @@ import { put, delay } from 'redux-saga/effects';
 import axios from 'axios';
 
 // use action creators
-import* as actions from '../actions/index';
+import * as actions from '../actions/index';
 
 // generators? next generation of javascript function
 export function* logoutSaga(action) {
