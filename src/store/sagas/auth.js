@@ -1,4 +1,4 @@
-import { put, delay } from 'redux-saga/effects';
+import { put, delay, call } from 'redux-saga/effects';
 import axios from 'axios';
 
 // use action creators
@@ -6,9 +6,15 @@ import * as actions from '../actions/index';
 
 // generators? next generation of javascript function
 export function* logoutSaga(action) {
-    yield localStorage.removeItem('token');
-    yield localStorage.removeItem('expirationDate');
-    yield localStorage.removeItem('userId');
+    // another way - this makes our generators testable, we can mock this
+    yield call([localStorage, 'removeItem'], 'token');
+    yield call([localStorage, 'removeItem'], 'expirationDate');
+    yield call([localStorage, 'removeItem'], 'userId');
+    // ^^ same as below
+
+    // yield localStorage.removeItem('token');
+    // yield localStorage.removeItem('expirationDate');
+    // yield localStorage.removeItem('userId');
 
     yield put(actions.logoutSucceed());
 };
