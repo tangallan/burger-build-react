@@ -1,5 +1,4 @@
 import * as actionTypes from './actionTypes';
-import axios from 'axios';
 
 export const authStart = () => {
     return {
@@ -99,24 +98,28 @@ export const setAuthRedirectPath = (path) => {
 };
 
 export const authCheckState = () => {
-    return dispatch => {
-        const token = localStorage.getItem('token');
-        if(!token) {
-            dispatch(logout());
-        } else {
-            const expirationDate = new Date(localStorage.getItem('expirationDate'));
-            const currentDate = new Date();
+    // MOVED to SAGA
+    // return dispatch => {
+    //     const token = localStorage.getItem('token');
+    //     if(!token) {
+    //         dispatch(logout());
+    //     } else {
+    //         const expirationDate = new Date(localStorage.getItem('expirationDate'));
+    //         const currentDate = new Date();
 
-            if (expirationDate > currentDate) {
-                const userId = localStorage.getItem('userId');
-                dispatch(authSuccess(token, userId));
+    //         if (expirationDate > currentDate) {
+    //             const userId = localStorage.getItem('userId');
+    //             dispatch(authSuccess(token, userId));
 
-                const remainingMs = (expirationDate.getTime() - new Date().getTime()) / 1000;
-                // console.log(`remaining ms: ${remainingMs}`);
-                dispatch(checkAuthTimeout(remainingMs));
-            } else {
-                dispatch(logout());
-            }
-        }
+    //             const remainingMs = (expirationDate.getTime() - new Date().getTime()) / 1000;
+    //             // console.log(`remaining ms: ${remainingMs}`);
+    //             dispatch(checkAuthTimeout(remainingMs));
+    //         } else {
+    //             dispatch(logout());
+    //         }
+    //     }
+    // }
+    return {
+        type: actionTypes.AUTH_CHECK_STATE
     }
 };
