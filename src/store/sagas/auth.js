@@ -66,3 +66,23 @@ export function* authUserSaga(action) {
     // });
     
 };
+
+export function* authCheckStateSaga(action) {
+    const token = yield localStorage.getItem('token');
+    if (!token) {
+        yield put(actions.logout()); // dispatch(logout());
+    } else {
+        const expirationDate = yield new Date(localStorage.getItem('expirationDate'));
+        const currentDate = yield new Date();
+
+        if (expirationDate > currentDate) {
+            const userId = yield localStorage.getItem('userId');
+            yield put(actions.authSuccess(token, userId)); //dispatch(authSuccess(token, userId));
+
+            const remainingMs = (expirationDate.getTime() - new Date().getTime()) / 1000;
+            yield put(actions.checkAuthTimeout(remainingMs)); // dispatch(checkAuthTimeout(remainingMs));
+        } else {
+            yield put(actions.logout()); // dispatch(logout());
+        }
+    }
+};
