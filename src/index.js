@@ -14,7 +14,7 @@ import orderReducer from './store/reducers/order';
 import authReducer from './store/reducers/auth';
 
 // sagas
-import { watchAuth, watchBurgerBuilder } from './store/sagas/index';
+import { watchAuth, watchBurgerBuilder, watchOrder } from './store/sagas/index';
 
 const composeEnhancers = process.env.NODE_ENV === 'development' ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__: null || compose;
 const rootReducers = combineReducers({
@@ -34,6 +34,7 @@ const store = createStore(
 // within the watchAuth it listens to an action
 sagaMiddleware.run(watchAuth);
 sagaMiddleware.run(watchBurgerBuilder);
+sagaMiddleware.run(watchOrder);
 
 const app = (
     <Provider store={store}>

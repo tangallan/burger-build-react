@@ -4,6 +4,7 @@ import * as actionTypes from '../actions/actionTypes';
 // sagas
 import { logoutSaga, checkAuthTimeoutSaga, authUserSaga, authCheckStateSaga } from './auth';
 import { initIngredientsSaga } from './burgerBuilder';
+import { purchaseBurgerSaga, fetchOrdersSaga } from './order';
 
 export function* watchAuth() {
     // CALL logoutSaga whenever the action 'AUTH_INITIATE_LOGOUT' is triggered
@@ -15,4 +16,9 @@ export function* watchAuth() {
 
 export function* watchBurgerBuilder() {
     yield takeEvery(actionTypes.INIT_INGREDIENTS, initIngredientsSaga);
+}
+
+export function* watchOrder() {
+    yield takeEvery(actionTypes.PURCHASE_BURGER, purchaseBurgerSaga);
+    yield takeEvery(actionTypes.FETCH_ORDERS, fetchOrdersSaga);
 }
